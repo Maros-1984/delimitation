@@ -1,2 +1,2 @@
-call backend from frontend
 write basic README.md
+put backend URL into some kind of frontend configuration

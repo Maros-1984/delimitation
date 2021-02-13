@@ -19,6 +19,6 @@ public class DelimitationBackendApplication {
 class HelloWorldController {
     @GetMapping("/")
     public String hello() {
-        return "hello world!";
+        return "{\"hello\": \"world!\"}";
     }
 }
