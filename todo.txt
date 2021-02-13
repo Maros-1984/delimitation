@@ -1,2 +1,4 @@
-write basic README.md
 put backend URL into some kind of frontend configuration
+endpoint /create-new-game - creates a blank game board with default size and returns ID to the frontend
+endpoint /get-game-status - retrieves the game detail including the unset player colors and possible moves
+endpoint /play-move - updates the game state
