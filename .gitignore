@@ -1,0 +1,23 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/delimitation-frontend/node_modules
+/delimitation-frontend/.pnp
+/delimitation-frontend.pnp.js
+
+# testing
+/delimitation-frontend/coverage
+
+# production
+/delimitation-frontend/build
+
+# misc
+/delimitation-frontend.DS_Store
+/delimitation-frontend.env.local
+/delimitation-frontend.env.development.local
+/delimitation-frontend.env.test.local
+/delimitation-frontend.env.production.local
+
+/delimitation-frontendnpm-debug.log*
+/delimitation-frontendyarn-debug.log*
+/delimitation-frontendyarn-error.log*
