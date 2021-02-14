@@ -1,8 +1,6 @@
-endpoint /create-new-game - creates a blank game board with default size, generated ID, and returns it to the frontend
 endpoint /play-move - updates the game state
 
 refactor App.js to more smaller components
 use https://stackoverflow.com/questions/42182481/getting-mouse-coordinates-in-react-and-jquery to highlight possible moves
 use onMouseDown or onMouseUp to make moves
 
-endpoint /get-game-status - retrieves the game detail including the unset player colors and possible moves

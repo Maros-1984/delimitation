@@ -5,7 +5,11 @@ import {AreaColor} from "./constants";
 
 const App = () => {
     useEffect(() => {
-        fetch(backendUrl)
+        fetch(backendUrl + "create-new-game", {
+            method: 'POST', body: "{}", headers: {
+                'Content-Type': 'application/json'
+            }
+        })
             .then(response => response.json())
             .then(data => console.log(data));
     }, [])
