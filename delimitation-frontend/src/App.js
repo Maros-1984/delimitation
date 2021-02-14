@@ -1,12 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
 import {useEffect, useState} from "react";
+import {backendUrl} from "./configuration";
 
 const App = () => {
     const [backendResponse, setBackendResponse] = useState()
 
     useEffect(() => {
-        fetch('https://delimitation.ey.r.appspot.com/')
+        fetch(backendUrl)
             .then(response => response.json())
             .then(data => setBackendResponse(data));
     }, [])

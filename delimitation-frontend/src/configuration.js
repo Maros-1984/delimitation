@@ -1,0 +1,1 @@
+export const backendUrl = 'https://delimitation.ey.r.appspot.com/';
