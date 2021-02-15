@@ -16,21 +16,17 @@ export const Area = ({gameWidth, color, areaX, areaY, setHighlightedMove}) => {
         if (x > y) {
             if (areaWidth - x > y) {
                 // Highlight upper border.
-                console.log('up')
                 setHighlightedMove({areaX, areaY: areaY - 1, bottom: true})
             } else {
                 // Highlight right border.
-                console.log('right')
                 setHighlightedMove({areaX, areaY, right: true})
             }
         } else {
             if (areaWidth - x > y) {
                 // Highlight left border.
-                console.log('left')
                 setHighlightedMove({areaX: areaX - 1, areaY, right: true})
             } else {
                 // Highlight bottom border.
-                console.log('bottom')
                 setHighlightedMove({areaX, areaY, bottom: true})
             }
         }

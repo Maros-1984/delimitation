@@ -46,14 +46,21 @@ class GameService {
                 .setYourPlayerColor(PlayerColor.values()[RandomUtils.nextInt(0, 1)])
                 .setPlayerOnMove(PlayerColor.values()[RandomUtils.nextInt(0, 1)]);
         databaseGateway.save(game);
+        if (game.getYourPlayerColor() != game.getPlayerOnMove()) {
+            game.setPossibleMoves(new HashSet<>());
+        }
         return game;
     }
 
     FullGameResponse getGameStatus(GetGameStatusRequest request) {
         FullGameResponse game = databaseGateway.load(request.getGameId());
+        if (request.getPlayerAsking() != game.getYourPlayerColor()) {
+            request.setPlayerAsking(game.getYourPlayerColor().otherPlayer());
+        }
         if (request.getPlayerAsking() != game.getPlayerOnMove()) {
             game.setPossibleMoves(new HashSet<>());
         }
+        game.setYourPlayerColor(request.getPlayerAsking());
         return game;
     }
 
@@ -65,7 +72,8 @@ class GameService {
         if (!game.getPossibleMoves().contains(request.getMove())) {
             return game;
         }
-
+        
+        request.getMove().setColor(request.getPlayer());
         game.getMoves().add(request.getMove());
         game.setPlayerOnMove(game.getPlayerOnMove().otherPlayer());
         game.setPossibleMoves(removeNonsenseMoves(computePossibleMoves(game, request.getMove()), game));

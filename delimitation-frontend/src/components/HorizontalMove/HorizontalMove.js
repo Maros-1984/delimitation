@@ -9,9 +9,10 @@ export const HorizontalMove = ({rowIndex, cellIndex, gameWidth, game, highlighte
 
     const isPossibleBottomMove = (rowIndex, cellIndex) => game.possibleMoves.find(pm => pm.areaX === cellIndex && pm.areaY === rowIndex && pm.bottom);
     const isHighlighted = highlightedMove?.areaX === cellIndex && highlightedMove?.areaY === rowIndex && highlightedMove?.bottom
-    const isMade = game.moves.find(pm => pm.areaX === cellIndex && pm.areaY === rowIndex && pm.bottom);
+    const madeMoveColor = game.moves.find(pm => pm.areaX === cellIndex && pm.areaY === rowIndex && pm.bottom)?.color?.toLowerCase();
+    console.log(madeMoveColor, game.moves.find(pm => pm.areaX === cellIndex && pm.areaY === rowIndex && pm.bottom))
 
     return <td style={horizontalBorderStyle}
-               className={isMade ? 'blue' : isPossibleBottomMove(rowIndex, cellIndex) ? isHighlighted ? 'highlightedBorder' : 'possibleMove border' : 'border'}
+               className={madeMoveColor ? madeMoveColor : isPossibleBottomMove(rowIndex, cellIndex) ? isHighlighted ? 'highlightedBorder' : 'possibleMove border' : 'border'}
     />;
 };

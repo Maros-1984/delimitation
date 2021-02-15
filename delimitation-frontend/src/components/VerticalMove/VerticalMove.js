@@ -9,11 +9,11 @@ export const VerticalMove = ({cellIndex, gameWidth, rowIndex, game, highlightedM
 
     const isPossibleRightMove = (rowIndex, cellIndex) => game.possibleMoves.find(pm => pm.areaX === cellIndex && pm.areaY === rowIndex && pm.right);
     const isHighlighted = highlightedMove?.areaX === cellIndex && highlightedMove?.areaY === rowIndex && highlightedMove?.right
-    const isMade = game.moves.find(pm => pm.areaX === cellIndex && pm.areaY === rowIndex && pm.right);
+    const madeMoveColor = game.moves.find(pm => pm.areaX === cellIndex && pm.areaY === rowIndex && pm.right)?.color?.toLowerCase();
 
     return <>
         {cellIndex !== gameWidth - 1 &&
         <td style={verticalBorderStyle}
-            className={isMade ? 'blue' : isPossibleRightMove(rowIndex, cellIndex) ? isHighlighted ? 'highlightedBorder' : 'possibleMove border' : 'border'}/>}
+            className={madeMoveColor ? madeMoveColor : isPossibleRightMove(rowIndex, cellIndex) ? isHighlighted ? 'highlightedBorder' : 'possibleMove border' : 'border'}/>}
     </>;
 };

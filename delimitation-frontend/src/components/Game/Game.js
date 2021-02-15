@@ -3,13 +3,15 @@ import {Fragment, useState} from "react";
 import {useCreateNewGame} from "../../hooks/useCreateNewGame";
 import {Area, HorizontalMove, InbetweenDot, Loader, VerticalMove} from "..";
 import {useMakeMove} from "../../hooks/useMakeMove";
+import {useWaitingForAnotherPlayer} from "../../hooks/useWaitingForAnotherPlayer";
 
 const Game = () => {
     const [highlightedMove, setHighlightedMove] = useState()
     const [moveToMake, setMoveToMake] = useState()
-
     const {game, setGame} = useCreateNewGame()
+
     useMakeMove(moveToMake, setMoveToMake, game, setGame);
+    useWaitingForAnotherPlayer(game, setGame)
 
     if (!game) {
         return <Loader/>

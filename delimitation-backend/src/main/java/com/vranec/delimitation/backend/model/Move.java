@@ -2,6 +2,7 @@ package com.vranec.delimitation.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.util.HashSet;
@@ -9,11 +10,13 @@ import java.util.Set;
 
 @Data
 @Accessors(chain = true)
+@EqualsAndHashCode(exclude = "color")
 public class Move {
     private int areaX;
     private int areaY;
     private Boolean bottom;
     private Boolean right;
+    private PlayerColor color;
 
     @JsonIgnore
     public Set<Move> getFirstSideNeighbourMoves() {

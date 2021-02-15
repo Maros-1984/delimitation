@@ -135,6 +135,7 @@ class GameControllerTest {
         FullGameResponse game = objectMapper.readValue(responseBody, FullGameResponse.class);
         assertThat(game.getAreas()).isEqualTo(newGame.getAreas());
         assertThat(game.getMoves()).hasSize(1);
+        move.setColor(newGame.getPlayerOnMove());
         assertThat(game.getMoves()).contains(move);
         assertThat(game.getPossibleMoves()).isEmpty();
     }

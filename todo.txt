@@ -1,4 +1,3 @@
-Frontend - multiplayer
-Frontend - display big start message
-
 Backend - implement finishing moves
+
+Frontend - display big start message

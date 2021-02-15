@@ -7,7 +7,11 @@ export const useMakeMove = (moveToMake, setMoveToMake, game, setGame) => {
 
         fetch(backendUrl + "make-move", {
             method: 'POST',
-            body: JSON.stringify({gameId: game.gameId, move: moveToMake, player: game.playerOnMove}),
+            body: JSON.stringify({
+                gameId: game.gameId,
+                move: moveToMake,
+                player: sessionStorage.getItem('playerColor')
+            }),
             headers: {
                 'Content-Type': 'application/json'
             }
