@@ -1,4 +1,4 @@
-export const HorizontalMove = ({rowIndex, cellIndex, gameWidth, possibleMoves}) => {
+export const HorizontalMove = ({rowIndex, cellIndex, gameWidth, possibleMoves, highlightedMove}) => {
     const areaWidth = 90 / gameWidth + '%';
     const borderWidth = 10 / (gameWidth + 1) + '%';
 
@@ -8,8 +8,9 @@ export const HorizontalMove = ({rowIndex, cellIndex, gameWidth, possibleMoves}) 
     }
 
     const isPossibleBottomMove = (rowIndex, cellIndex) => possibleMoves.find(pm => pm.areaX === cellIndex && pm.areaY === rowIndex && pm.bottom);
+    const isHighlighted = highlightedMove?.areaX === cellIndex && highlightedMove?.areaY === rowIndex && highlightedMove?.bottom
 
     return <td style={horizontalBorderStyle}
-               className={isPossibleBottomMove(rowIndex, cellIndex) ? 'possibleMove border' : 'border'}
+               className={isPossibleBottomMove(rowIndex, cellIndex) ? isHighlighted ? 'highlightedBorder' : 'possibleMove border' : 'border'}
     />;
 };

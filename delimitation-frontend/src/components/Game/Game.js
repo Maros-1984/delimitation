@@ -1,10 +1,11 @@
 import './Game.css';
-import {Fragment} from "react";
-import {useCreateNewGame} from "./backendCalls";
+import {Fragment, useState} from "react";
+import {useCreateNewGame} from "../../hooks/useCreateNewGame";
 import {Area, HorizontalMove, InbetweenDot, Loader, VerticalMove} from "..";
 
 const Game = () => {
     const gameState = useCreateNewGame()
+    const [highlightedMove, setHighlightedMove] = useState()
 
     if (!gameState) {
         return <Loader/>
@@ -24,9 +25,11 @@ const Game = () => {
                                 {row.map((cell, cellIndex) => {
                                     return (
                                         <Fragment key={'cell-' + rowIndex + "-" + cellIndex}>
-                                            <Area gameWidth={gameWidth} color={cell}/>
+                                            <Area gameWidth={gameWidth} color={cell} areaY={rowIndex} areaX={cellIndex}
+                                                  setHighlightedMove={setHighlightedMove}/>
                                             <VerticalMove cellIndex={cellIndex} gameWidth={gameWidth}
-                                                          rowIndex={rowIndex} possibleMoves={gameState.possibleMoves}/>
+                                                          rowIndex={rowIndex} possibleMoves={gameState.possibleMoves}
+                                                          highlightedMove={highlightedMove}/>
                                         </Fragment>)
                                 })}
                             </tr>
@@ -35,7 +38,7 @@ const Game = () => {
                                     {row.map((cell, cellIndex) => {
                                         return (<Fragment key={'bottom-border-of-cell-' + rowIndex + "-" + cellIndex}>
                                                 <HorizontalMove rowIndex={rowIndex} cellIndex={cellIndex}
-                                                                gameWidth={gameWidth}
+                                                                gameWidth={gameWidth} highlightedMove={highlightedMove}
                                                                 possibleMoves={gameState.possibleMoves}/>
                                                 <InbetweenDot cellIndex={cellIndex} gameWidth={gameWidth}/>
                                             </Fragment>

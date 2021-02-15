@@ -10,7 +10,10 @@ table {
     background-color: #f3f3f3;
 }
 
+.highlightedBorder {
+    background-color: yellow;
+}
+
 .possibleMove:hover {
     background-color: yellow;
-    transition: 1s;
 }

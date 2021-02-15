@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {backendUrl} from "./configuration";
+import {backendUrl} from "../components/Game/configuration";
 
 export const useCreateNewGame = () => {
     const [gameState, setGame] = useState()
