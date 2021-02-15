@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {backendUrl} from "../components/Game/configuration";
 
 export const useCreateNewGame = () => {
-    const [gameState, setGame] = useState()
+    const [game, setGame] = useState()
 
     useEffect(() => {
         fetch(backendUrl + "create-new-game", {
@@ -14,5 +14,5 @@ export const useCreateNewGame = () => {
             .then(data => setGame(data));
     }, [])
 
-    return gameState;
+    return {game, setGame};
 }

@@ -1,4 +1,3 @@
-Frontend - use onMouseDown or onMouseUp to make moves
 Frontend - display made moves
 Frontend - multiplayer
 
