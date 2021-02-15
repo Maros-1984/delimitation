@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 class GameService {
@@ -16,19 +19,19 @@ class GameService {
 
     FullGameResponse createNewGame(CreateNewGameRequest request) {
         List<List<AreaColor>> areas = new ArrayList<>();
-        List<PossibleMove> possibleMoves = new ArrayList<>();
+        Set<Move> possibleMoves = new HashSet<>();
         for (int rowIndex = 0; rowIndex < request.getHeight(); rowIndex++) {
             areas.add(new ArrayList<>());
             for (int columnIndex = 0; columnIndex < request.getWidth(); columnIndex++) {
                 areas.get(rowIndex).add(AreaColor.EMPTY);
                 if ((rowIndex == 0 || rowIndex == request.getHeight() - 1) && columnIndex < request.getWidth() - 1) {
-                    possibleMoves.add(new PossibleMove()
+                    possibleMoves.add(new Move()
                             .setAreaY(rowIndex)
                             .setAreaX(columnIndex)
                             .setRight(true));
                 }
                 if ((columnIndex == 0 || columnIndex == request.getWidth() - 1) && rowIndex < request.getHeight() - 1) {
-                    possibleMoves.add(new PossibleMove()
+                    possibleMoves.add(new Move()
                             .setAreaY(rowIndex)
                             .setAreaX(columnIndex)
                             .setBottom(true));
@@ -49,8 +52,49 @@ class GameService {
     FullGameResponse getGameStatus(GetGameStatusRequest request) {
         FullGameResponse game = databaseGateway.load(request.getGameId());
         if (request.getPlayerAsking() != game.getPlayerOnMove()) {
-            game.setPossibleMoves(new ArrayList<>());
+            game.setPossibleMoves(new HashSet<>());
         }
         return game;
+    }
+
+    FullGameResponse makeMove(MakeMoveRequest request) {
+        FullGameResponse game = getGameStatus(new GetGameStatusRequest()
+                .setGameId(request.getGameId())
+                .setPlayerAsking(request.getPlayer())
+                .setDifferenceOnly(true));
+        if (!game.getPossibleMoves().contains(request.getMove())) {
+            return game;
+        }
+
+        game.getMoves().add(request.getMove());
+        game.setPlayerOnMove(game.getPlayerOnMove().otherPlayer());
+        game.setPossibleMoves(removeNonsenseMoves(computePossibleMoves(game, request.getMove()), game));
+        databaseGateway.save(game);
+
+        game.setPossibleMoves(new HashSet<>());
+        return game;
+    }
+
+    private Set<Move> computePossibleMoves(FullGameResponse game, Move move) {
+        Set<Move> moves = new HashSet<>();
+        Set<Move> firstSideNeighbourMoves = move.getFirstSideNeighbourMoves();
+        Set<Move> secondSideNeighbourMoves = move.getSecondSideNeighbourMoves();
+
+        boolean connectsToFirstMoves = game.connectsTo(firstSideNeighbourMoves);
+        boolean connectsToSecondMoves = game.connectsTo(secondSideNeighbourMoves);
+
+        if (connectsToFirstMoves && !connectsToSecondMoves) {
+            return secondSideNeighbourMoves;
+        } else if (!connectsToFirstMoves && connectsToSecondMoves) {
+            return firstSideNeighbourMoves;
+        } else {
+            // TODO: Implement finishing moves.
+            return moves;
+        }
+    }
+
+    private Set<Move> removeNonsenseMoves(Set<Move> moves, FullGameResponse game) {
+        // TODO: Do not rmeove finishing moves.
+        return moves.stream().filter(move -> !computePossibleMoves(game, move).isEmpty()).collect(Collectors.toSet());
     }
 }

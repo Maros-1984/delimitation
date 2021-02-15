@@ -1,6 +1,6 @@
-endpoint /play-move - updates the game state
+Frontend - refactor App.js to more smaller components
 
-refactor App.js to more smaller components
-use https://stackoverflow.com/questions/42182481/getting-mouse-coordinates-in-react-and-jquery to highlight possible moves
-use onMouseDown or onMouseUp to make moves
+Frontend - use https://stackoverflow.com/questions/42182481/getting-mouse-coordinates-in-react-and-jquery to highlight possible moves
+Frontend - use onMouseDown or onMouseUp to make moves
 
+Backend - implement finishing moves

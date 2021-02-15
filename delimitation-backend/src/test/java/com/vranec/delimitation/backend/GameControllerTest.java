@@ -3,8 +3,8 @@ package com.vranec.delimitation.backend;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vranec.delimitation.backend.model.FullGameResponse;
 import com.vranec.delimitation.backend.model.GetGameStatusRequest;
-import com.vranec.delimitation.backend.model.PlayerColor;
-import com.vranec.delimitation.backend.model.PossibleMove;
+import com.vranec.delimitation.backend.model.MakeMoveRequest;
+import com.vranec.delimitation.backend.model.Move;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,24 +39,24 @@ class GameControllerTest {
         assertThat(game.getPlayerOnMove()).isNotNull();
         assertThat(game.getPossibleMoves()).isNotEmpty();
         // Upper left corner.
-        assertThat(game.getPossibleMoves()).contains(new PossibleMove().setAreaX(0).setAreaY(0).setRight(true));
-        assertThat(game.getPossibleMoves()).contains(new PossibleMove().setAreaX(0).setAreaY(0).setBottom(true));
+        assertThat(game.getPossibleMoves()).contains(new Move().setAreaX(0).setAreaY(0).setRight(true));
+        assertThat(game.getPossibleMoves()).contains(new Move().setAreaX(0).setAreaY(0).setBottom(true));
         // Upper right corner.
-        assertThat(game.getPossibleMoves()).contains(new PossibleMove().setAreaX(18).setAreaY(0).setRight(true));
-        assertThat(game.getPossibleMoves()).contains(new PossibleMove().setAreaX(19).setAreaY(0).setBottom(true));
+        assertThat(game.getPossibleMoves()).contains(new Move().setAreaX(18).setAreaY(0).setRight(true));
+        assertThat(game.getPossibleMoves()).contains(new Move().setAreaX(19).setAreaY(0).setBottom(true));
         // Lower left corner.
-        assertThat(game.getPossibleMoves()).contains(new PossibleMove().setAreaX(0).setAreaY(9).setRight(true));
-        assertThat(game.getPossibleMoves()).contains(new PossibleMove().setAreaX(0).setAreaY(8).setBottom(true));
+        assertThat(game.getPossibleMoves()).contains(new Move().setAreaX(0).setAreaY(9).setRight(true));
+        assertThat(game.getPossibleMoves()).contains(new Move().setAreaX(0).setAreaY(8).setBottom(true));
         // Lower right corner.
-        assertThat(game.getPossibleMoves()).contains(new PossibleMove().setAreaX(18).setAreaY(9).setRight(true));
-        assertThat(game.getPossibleMoves()).contains(new PossibleMove().setAreaX(19).setAreaY(8).setBottom(true));
+        assertThat(game.getPossibleMoves()).contains(new Move().setAreaX(18).setAreaY(9).setRight(true));
+        assertThat(game.getPossibleMoves()).contains(new Move().setAreaX(19).setAreaY(8).setBottom(true));
 
-        assertThat(game.getPossibleMoves()).doesNotContain(new PossibleMove().setAreaX(1).setAreaY(1).setRight(true));
-        assertThat(game.getPossibleMoves()).doesNotContain(new PossibleMove().setAreaX(1).setAreaY(1).setBottom(true));
-        assertThat(game.getPossibleMoves()).doesNotContain(new PossibleMove().setAreaX(19).setAreaY(0).setRight(true));
-        assertThat(game.getPossibleMoves()).doesNotContain(new PossibleMove().setAreaX(0).setAreaY(9).setBottom(true));
-        assertThat(game.getPossibleMoves()).doesNotContain(new PossibleMove().setAreaX(19).setAreaY(9).setRight(true));
-        assertThat(game.getPossibleMoves()).doesNotContain(new PossibleMove().setAreaX(19).setAreaY(9).setBottom(true));
+        assertThat(game.getPossibleMoves()).doesNotContain(new Move().setAreaX(1).setAreaY(1).setRight(true));
+        assertThat(game.getPossibleMoves()).doesNotContain(new Move().setAreaX(1).setAreaY(1).setBottom(true));
+        assertThat(game.getPossibleMoves()).doesNotContain(new Move().setAreaX(19).setAreaY(0).setRight(true));
+        assertThat(game.getPossibleMoves()).doesNotContain(new Move().setAreaX(0).setAreaY(9).setBottom(true));
+        assertThat(game.getPossibleMoves()).doesNotContain(new Move().setAreaX(19).setAreaY(9).setRight(true));
+        assertThat(game.getPossibleMoves()).doesNotContain(new Move().setAreaX(19).setAreaY(9).setBottom(true));
     }
 
     @Test
@@ -85,7 +85,7 @@ class GameControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new GetGameStatusRequest()
                         .setGameId(newGame.getGameId())
-                        .setPlayerAsking(newGame.getPlayerOnMove() == PlayerColor.RED ? PlayerColor.BLUE : PlayerColor.RED))))
+                        .setPlayerAsking(newGame.getPlayerOnMove().otherPlayer()))))
                 .andReturn();
 
         assertThat(mvcResult.getResponse().getStatus()).isEqualTo(200);
@@ -93,6 +93,78 @@ class GameControllerTest {
         assertThat(responseBody).isNotBlank();
         FullGameResponse game = objectMapper.readValue(responseBody, FullGameResponse.class);
         assertThat(game.getPossibleMoves()).isEmpty();
+    }
+
+    @Test
+    void makeMove_givenPlayerNotOnTurn_returnsUnchangedGame() throws Exception {
+        FullGameResponse newGame = createDefaultGame();
+
+        MvcResult mvcResult = mockMvc.perform(post("/make-move")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new MakeMoveRequest()
+                        .setGameId(newGame.getGameId())
+                        .setMove(new Move().setAreaX(0).setAreaY(0).setRight(true))
+                        .setPlayer(newGame.getPlayerOnMove().otherPlayer()))))
+                .andReturn();
+
+        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(200);
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        assertThat(responseBody).isNotBlank();
+        FullGameResponse game = objectMapper.readValue(responseBody, FullGameResponse.class);
+        assertThat(game.getAreas()).isEqualTo(newGame.getAreas());
+        assertThat(game.getMoves()).isEmpty();
+        assertThat(game.getPossibleMoves()).isEmpty();
+    }
+
+    @Test
+    void makeMove_givenPlayerOnTurn_returnsChanged() throws Exception {
+        FullGameResponse newGame = createDefaultGame();
+        Move move = new Move().setAreaX(0).setAreaY(0).setRight(true);
+
+        MvcResult mvcResult = mockMvc.perform(post("/make-move")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new MakeMoveRequest()
+                        .setGameId(newGame.getGameId())
+                        .setMove(move)
+                        .setPlayer(newGame.getPlayerOnMove()))))
+                .andReturn();
+
+        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(200);
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        assertThat(responseBody).isNotBlank();
+        FullGameResponse game = objectMapper.readValue(responseBody, FullGameResponse.class);
+        assertThat(game.getAreas()).isEqualTo(newGame.getAreas());
+        assertThat(game.getMoves()).hasSize(1);
+        assertThat(game.getMoves()).contains(move);
+        assertThat(game.getPossibleMoves()).isEmpty();
+    }
+
+
+    @Test
+    void makeMove_givenOtherPlayerTurn_returnsChangedGame() throws Exception {
+        FullGameResponse newGame = createDefaultGame();
+        Move move = new Move().setAreaX(0).setAreaY(0).setRight(true);
+
+        mockMvc.perform(post("/make-move")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new MakeMoveRequest()
+                        .setGameId(newGame.getGameId())
+                        .setMove(move)
+                        .setPlayer(newGame.getPlayerOnMove()))))
+                .andReturn();
+
+        MvcResult mvcResult = mockMvc.perform(post("/get-game-status")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new GetGameStatusRequest()
+                        .setGameId(newGame.getGameId())
+                        .setPlayerAsking(newGame.getPlayerOnMove().otherPlayer()))))
+                .andReturn();
+
+        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(200);
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        assertThat(responseBody).isNotBlank();
+        FullGameResponse game = objectMapper.readValue(responseBody, FullGameResponse.class);
+        assertThat(game.getPossibleMoves()).hasSize(2);
     }
 
     private FullGameResponse createDefaultGame() throws Exception {

@@ -3,6 +3,7 @@ package com.vranec.delimitation.backend;
 import com.vranec.delimitation.backend.model.CreateNewGameRequest;
 import com.vranec.delimitation.backend.model.FullGameResponse;
 import com.vranec.delimitation.backend.model.GetGameStatusRequest;
+import com.vranec.delimitation.backend.model.MakeMoveRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,5 +22,10 @@ class GameController {
     @PostMapping("/get-game-status")
     FullGameResponse createNewGame(@RequestBody GetGameStatusRequest request) {
         return gameService.getGameStatus(request);
+    }
+
+    @PostMapping("/make-move")
+    FullGameResponse makeMove(@RequestBody MakeMoveRequest request) {
+        return gameService.makeMove(request);
     }
 }
