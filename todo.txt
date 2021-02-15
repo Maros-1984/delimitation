@@ -1,5 +1,3 @@
-Frontend - refactor App.js to more smaller components
-
 Frontend - use https://stackoverflow.com/questions/42182481/getting-mouse-coordinates-in-react-and-jquery to highlight possible moves
 Frontend - use onMouseDown or onMouseUp to make moves
 
