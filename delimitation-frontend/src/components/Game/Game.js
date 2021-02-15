@@ -41,7 +41,7 @@ const Game = () => {
                                             <Area gameWidth={gameWidth} color={cell} areaY={rowIndex} areaX={cellIndex}
                                                   setHighlightedMove={setHighlightedMove}/>
                                             <VerticalMove cellIndex={cellIndex} gameWidth={gameWidth}
-                                                          rowIndex={rowIndex} possibleMoves={game.possibleMoves}
+                                                          rowIndex={rowIndex} game={game}
                                                           highlightedMove={highlightedMove}/>
                                         </Fragment>)
                                 })}
@@ -52,7 +52,7 @@ const Game = () => {
                                         return (<Fragment key={'bottom-border-of-cell-' + rowIndex + "-" + cellIndex}>
                                                 <HorizontalMove rowIndex={rowIndex} cellIndex={cellIndex}
                                                                 gameWidth={gameWidth} highlightedMove={highlightedMove}
-                                                                possibleMoves={game.possibleMoves}/>
+                                                                game={game}/>
                                                 <InbetweenDot cellIndex={cellIndex} gameWidth={gameWidth}/>
                                             </Fragment>
                                         )

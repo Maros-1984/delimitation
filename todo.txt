@@ -1,4 +1,4 @@
-Frontend - display made moves
 Frontend - multiplayer
+Frontend - display big start message
 
 Backend - implement finishing moves

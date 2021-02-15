@@ -17,3 +17,11 @@ table {
 .possibleMove:hover {
     background-color: yellow;
 }
+
+.red {
+    background-color: red;
+}
+
+.blue {
+    background-color: blue;
+}

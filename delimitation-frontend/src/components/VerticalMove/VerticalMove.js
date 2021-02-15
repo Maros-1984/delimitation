@@ -1,4 +1,4 @@
-export const VerticalMove = ({cellIndex, gameWidth, rowIndex, possibleMoves, highlightedMove}) => {
+export const VerticalMove = ({cellIndex, gameWidth, rowIndex, game, highlightedMove}) => {
     const areaWidth = 90 / gameWidth + '%';
     const borderWidth = 10 / (gameWidth + 1) + '%';
 
@@ -7,12 +7,13 @@ export const VerticalMove = ({cellIndex, gameWidth, rowIndex, possibleMoves, hig
         width: borderWidth,
     }
 
-    const isPossibleRightMove = (rowIndex, cellIndex) => possibleMoves.find(pm => pm.areaX === cellIndex && pm.areaY === rowIndex && pm.right);
+    const isPossibleRightMove = (rowIndex, cellIndex) => game.possibleMoves.find(pm => pm.areaX === cellIndex && pm.areaY === rowIndex && pm.right);
     const isHighlighted = highlightedMove?.areaX === cellIndex && highlightedMove?.areaY === rowIndex && highlightedMove?.right
+    const isMade = game.moves.find(pm => pm.areaX === cellIndex && pm.areaY === rowIndex && pm.right);
 
     return <>
         {cellIndex !== gameWidth - 1 &&
         <td style={verticalBorderStyle}
-            className={isPossibleRightMove(rowIndex, cellIndex) ? isHighlighted ? 'highlightedBorder' : 'possibleMove border' : 'border'}/>}
+            className={isMade ? 'blue' : isPossibleRightMove(rowIndex, cellIndex) ? isHighlighted ? 'highlightedBorder' : 'possibleMove border' : 'border'}/>}
     </>;
 };
