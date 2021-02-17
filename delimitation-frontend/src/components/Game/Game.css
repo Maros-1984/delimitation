@@ -25,3 +25,11 @@ table {
 .blue {
     background-color: blue;
 }
+
+.redArea {
+    background-color: lightcoral;
+}
+
+.blueArea {
+    background-color: lightblue;
+}

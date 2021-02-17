@@ -1,5 +1,6 @@
 package com.vranec.delimitation.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -22,6 +23,16 @@ public class FullGameResponse {
     }
 
     public boolean connectsTo(Move move) {
-        return moves.contains(move) || move.isOriginalBorder(areas.get(0).size(), areas.size());
+        return moves.contains(move) || move.isOriginalBorder(getWidth(), getHeight());
+    }
+
+    @JsonIgnore
+    public int getHeight() {
+        return getAreas().size();
+    }
+
+    @JsonIgnore
+    public int getWidth() {
+        return getAreas().get(0).size();
     }
 }

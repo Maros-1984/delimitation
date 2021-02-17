@@ -6,4 +6,8 @@ public enum PlayerColor {
     public PlayerColor otherPlayer() {
         return this == RED ? BLUE : RED;
     }
+
+    public AreaColor toAreaColor() {
+        return this == RED ? AreaColor.RED : AreaColor.BLUE;
+    }
 }

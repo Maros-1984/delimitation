@@ -32,5 +32,5 @@ export const Area = ({gameWidth, color, areaX, areaY, setHighlightedMove}) => {
         }
     };
 
-    return <td onMouseMove={handleMouseMove} className={color.toLowerCase()} style={areaStyle}/>;
+    return <td onMouseMove={handleMouseMove} className={color.toLowerCase() + "Area"} style={areaStyle}/>;
 };
