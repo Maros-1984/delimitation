@@ -6,8 +6,9 @@ export const InfoMessage = ({game}) => {
     if (game.possibleMoves.length === 0) {
         return (
             <div className="infoMessage">
-                <h1>Wait for <span style={{color: game.playerOnMove.toLowerCase()}}>other player</span> to move.</h1>
-                {game.moves.length === 0 && <p>Send him the URL if you have not already.</p>}
+                <h1 className="glow">Wait for <span
+                    style={{color: game.playerOnMove.toLowerCase()}}>other player</span> to move.</h1>
+                {game.moves.length <= 1 && <p>Send him the URL if you have not already.</p>}
             </div>);
     }
 
@@ -33,4 +34,6 @@ export const InfoMessage = ({game}) => {
                         style={{color: 'red'}}>RED</span> player.</h2>)}
             </div>);
     }
+
+    return null
 }
