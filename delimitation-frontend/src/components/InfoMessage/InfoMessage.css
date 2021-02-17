@@ -1,0 +1,8 @@
+.infoMessage {
+    position: fixed;
+    width: 100%;
+    text-align: center;
+    top: 40%;
+    font-size: x-large;
+    z-index: 1;
+}

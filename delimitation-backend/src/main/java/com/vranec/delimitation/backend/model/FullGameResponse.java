@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Accessors(chain = true)
@@ -17,6 +15,8 @@ public class FullGameResponse {
     private String gameId;
     private PlayerColor yourPlayerColor;
     private PlayerColor playerOnMove;
+    private boolean over;
+    private Map<AreaColor, Integer> score = new HashMap<>();
 
     public boolean connectsTo(Set<Move> moves) {
         return moves.stream().anyMatch(this::connectsTo);
@@ -34,5 +34,17 @@ public class FullGameResponse {
     @JsonIgnore
     public int getWidth() {
         return getAreas().get(0).size();
+    }
+
+    @JsonIgnore
+    public void increaseScoreFor(AreaColor color) {
+        int oldScore = score.getOrDefault(color, 0);
+        score.put(color, oldScore + 1);
+    }
+
+    @JsonIgnore
+    public void descreaseScoreFor(AreaColor color) {
+        int oldScore = score.get(color);
+        score.put(color, oldScore - 1);
     }
 }

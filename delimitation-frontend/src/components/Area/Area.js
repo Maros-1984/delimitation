@@ -1,8 +1,10 @@
 import {useWindowDimensions} from "../../hooks/useWindowDimensions";
+import {Loader} from "../Loader/Loader";
+import {BORDER_PERCENTAGE_OF_AREA} from "../Game/configuration";
 
-export const Area = ({gameWidth, color, areaX, areaY, setHighlightedMove}) => {
+export const Area = ({gameWidth, color, areaX, areaY, setHighlightedMove, moveToMake}) => {
     const {width} = useWindowDimensions()
-    const areaWidth = .9 / gameWidth * width;
+    const areaWidth = (100 - BORDER_PERCENTAGE_OF_AREA) / 100 / gameWidth * width;
 
     const areaStyle = {
         paddingBottom: areaWidth + "px",
@@ -32,5 +34,7 @@ export const Area = ({gameWidth, color, areaX, areaY, setHighlightedMove}) => {
         }
     };
 
-    return <td onMouseMove={handleMouseMove} className={color.toLowerCase() + "Area"} style={areaStyle}/>;
+    return (<td onMouseMove={handleMouseMove} className={color.toLowerCase() + "Area"} style={areaStyle}>
+        {moveToMake && moveToMake.areaX === areaX && moveToMake.areaY === areaY && (<Loader/>)}
+    </td>)
 };

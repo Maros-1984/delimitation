@@ -64,6 +64,9 @@ class GameService {
         game.getMoves().add(request.getMove());
         game.setPossibleMoves(removeNonsenseMoves(computePossibleMoves(game, request.getMove()), game));
         game.setPlayerOnMove(game.getPlayerOnMove().otherPlayer());
+        if (game.getPossibleMoves().isEmpty()) {
+            game.setOver(true);
+        }
         databaseGateway.save(game);
 
         game.setPossibleMoves(new HashSet<>());

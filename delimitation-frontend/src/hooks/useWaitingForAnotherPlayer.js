@@ -1,12 +1,12 @@
 import {useEffect} from "react";
-import {backendUrl} from "../components/Game/configuration";
+import {BACKEND_URL} from "../components/Game/configuration";
 
 export const useWaitingForAnotherPlayer = (game, setGame) => {
     useEffect(() => {
         if (!game || game.possibleMoves.length > 0) return
 
         setTimeout(() =>
-            fetch(backendUrl + "get-game-status", {
+            fetch(BACKEND_URL + "get-game-status", {
                 method: 'POST', body: JSON.stringify({
                     gameId: game.gameId,
                     playerAsking: sessionStorage.getItem('playerColor'),

@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {backendUrl} from "../components/Game/configuration";
+import {BACKEND_URL} from "../components/Game/configuration";
 
 export const useCreateNewGame = () => {
     const [game, setGame] = useState()
@@ -13,7 +13,7 @@ export const useCreateNewGame = () => {
         }
 
         if (gameId?.length > 0) {
-            fetch(backendUrl + "get-game-status", {
+            fetch(BACKEND_URL + "get-game-status", {
                 method: 'POST', body: JSON.stringify({gameId, playerAsking: lastPlayerColor}), headers: {
                     'Content-Type': 'application/json'
                 }
@@ -26,7 +26,7 @@ export const useCreateNewGame = () => {
                 });
 
         } else {
-            fetch(backendUrl + "create-new-game", {
+            fetch(BACKEND_URL + "create-new-game", {
                 method: 'POST', body: "{}", headers: {
                     'Content-Type': 'application/json'
                 }

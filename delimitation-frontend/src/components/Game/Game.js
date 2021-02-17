@@ -1,7 +1,7 @@
 import './Game.css';
 import {Fragment, useState} from "react";
 import {useCreateNewGame} from "../../hooks/useCreateNewGame";
-import {Area, HorizontalMove, InbetweenDot, Loader, VerticalMove} from "..";
+import {Area, HorizontalMove, InbetweenDot, InfoMessage, Loader, VerticalMove} from "..";
 import {useMakeMove} from "../../hooks/useMakeMove";
 import {useWaitingForAnotherPlayer} from "../../hooks/useWaitingForAnotherPlayer";
 
@@ -41,7 +41,7 @@ const Game = () => {
                                     return (
                                         <Fragment key={'cell-' + rowIndex + "-" + cellIndex}>
                                             <Area gameWidth={gameWidth} color={cell} areaY={rowIndex} areaX={cellIndex}
-                                                  setHighlightedMove={setHighlightedMove}/>
+                                                  setHighlightedMove={setHighlightedMove} moveToMake={moveToMake}/>
                                             <VerticalMove cellIndex={cellIndex} gameWidth={gameWidth}
                                                           rowIndex={rowIndex} game={game}
                                                           highlightedMove={highlightedMove}/>
@@ -65,6 +65,7 @@ const Game = () => {
                 })}
                 </tbody>
             </table>
+            <InfoMessage game={game}/>
         </div>
     );
 };

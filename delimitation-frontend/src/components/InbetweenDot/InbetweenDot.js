@@ -1,5 +1,7 @@
+import {BORDER_PERCENTAGE_OF_AREA} from "../Game/configuration";
+
 export const InbetweenDot = ({cellIndex, gameWidth}) => {
-    const borderWidth = 10 / (gameWidth + 1) + '%';
+    const borderWidth = BORDER_PERCENTAGE_OF_AREA / (gameWidth + 1) + '%';
 
     const dotStyle = {
         paddingBottom: borderWidth,

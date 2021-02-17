@@ -1,6 +1,8 @@
+import {BORDER_PERCENTAGE_OF_AREA} from "../Game/configuration";
+
 export const VerticalMove = ({cellIndex, gameWidth, rowIndex, game, highlightedMove}) => {
-    const areaWidth = 90 / gameWidth + '%';
-    const borderWidth = 10 / (gameWidth + 1) + '%';
+    const areaWidth = (100 - BORDER_PERCENTAGE_OF_AREA) / gameWidth + '%';
+    const borderWidth = BORDER_PERCENTAGE_OF_AREA / (gameWidth + 1) + '%';
 
     const verticalBorderStyle = {
         paddingBottom: areaWidth,

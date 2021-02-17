@@ -15,12 +15,15 @@ public class Area {
     private FullGameResponse game;
 
     public void unfill() {
+        game.descreaseScoreFor(game.getAreas().get(areaY).get(areaX));
         game.getAreas().get(areaY).set(areaX, AreaColor.EMPTY);
     }
 
     public void fill() {
         if (isInsideGame()) {
-            game.getAreas().get(areaY).set(areaX, game.getPlayerOnMove().toAreaColor());
+            AreaColor color = game.getPlayerOnMove().toAreaColor();
+            game.getAreas().get(areaY).set(areaX, color);
+            game.increaseScoreFor(color);
         }
     }
 

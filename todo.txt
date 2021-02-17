@@ -1,5 +1,1 @@
-Frontend - design fixes
-Frontend - make moves instantly
-Frontend - display big start message
-Frontend - display other player is on turn
-Frontend - put border width into configuration
+Refactor both backend and frontend for better readability

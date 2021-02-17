@@ -1,11 +1,11 @@
 import {useEffect} from "react";
-import {backendUrl} from "../components/Game/configuration";
+import {BACKEND_URL} from "../components/Game/configuration";
 
 export const useMakeMove = (moveToMake, setMoveToMake, game, setGame) => {
     useEffect(() => {
         if (!moveToMake) return
 
-        fetch(backendUrl + "make-move", {
+        fetch(BACKEND_URL + "make-move", {
             method: 'POST',
             body: JSON.stringify({
                 gameId: game.gameId,

@@ -46,6 +46,20 @@ class GameServiceTest {
         makeMove(new BottomMove(4, 0));
     }
 
+    @Test
+    void gameService_canDetectGameOver() {
+        game = gameService.createNewGame(new CreateNewGameRequest().setWidth(3).setHeight(2));
+        player = game.getPlayerOnMove();
+
+        makeMove(new BottomMove(0, 0));
+        makeMove(new BottomMove(1, 0));
+        makeMove(new BottomMove(2, 0));
+
+        assertThat(game.getScore().get(player.toAreaColor())).isEqualTo(0);
+        assertThat(game.getScore().get(player.otherPlayer().toAreaColor())).isEqualTo(3);
+        assertThat(game.isOver()).isTrue();
+    }
+
     private void makeMove(Move move) {
         Move result = new Move();
         BeanUtils.copyProperties(move, result);
