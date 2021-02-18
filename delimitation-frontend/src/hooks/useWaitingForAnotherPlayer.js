@@ -3,7 +3,7 @@ import {BACKEND_URL} from "../components/Game/configuration";
 
 export const useWaitingForAnotherPlayer = (game, setGame) => {
     useEffect(() => {
-        if (!game || game.possibleMoves.length > 0) return
+        if (!game || game.over || game.possibleMoves.length > 0) return
 
         setTimeout(() =>
             fetch(BACKEND_URL + "get-game-status", {
