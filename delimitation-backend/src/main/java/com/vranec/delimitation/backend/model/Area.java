@@ -20,7 +20,7 @@ public class Area {
     }
 
     public void fill() {
-        if (isInsideGame()) {
+        if (isInsideGame() && isNotFilled()) {
             AreaColor color = game.getPlayerOnMove().toAreaColor();
             game.getAreas().get(areaY).set(areaX, color);
             game.increaseScoreFor(color);

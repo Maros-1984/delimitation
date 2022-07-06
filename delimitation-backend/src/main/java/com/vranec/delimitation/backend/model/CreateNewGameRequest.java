@@ -8,4 +8,5 @@ import lombok.experimental.Accessors;
 public class CreateNewGameRequest {
     private int width = 20;
     private int height = 10;
+    private boolean againstComputer = true;
 }

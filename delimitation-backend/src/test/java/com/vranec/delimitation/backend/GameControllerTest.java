@@ -170,8 +170,8 @@ class GameControllerTest {
 
     private FullGameResponse createDefaultGame() throws Exception {
         MvcResult mvcResult = mockMvc.perform(post("/create-new-game")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"againstComputer\":false}"))
                 .andReturn();
 
         assertThat(mvcResult.getResponse().getStatus()).isEqualTo(200);

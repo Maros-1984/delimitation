@@ -1,6 +1,14 @@
 package com.vranec.delimitation.backend;
 
-import com.vranec.delimitation.backend.model.*;
+import com.vranec.delimitation.backend.model.Area;
+import com.vranec.delimitation.backend.model.AreaColor;
+import com.vranec.delimitation.backend.model.CreateNewGameRequest;
+import com.vranec.delimitation.backend.model.FullGameResponse;
+import com.vranec.delimitation.backend.model.GetGameStatusRequest;
+import com.vranec.delimitation.backend.model.MakeMoveRequest;
+import com.vranec.delimitation.backend.model.Move;
+import com.vranec.delimitation.backend.model.PlayerColor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,16 +17,22 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 class GameService {
+
     @Autowired
     private DatabaseGateway databaseGateway;
+    @Autowired
+    private ComputerPlayerApi computerPlayerApi;
 
     FullGameResponse createNewGame(CreateNewGameRequest request) {
         List<List<AreaColor>> areas = new ArrayList<>();
+        log.info("Starting creating new game " + request.getWidth() + "x" + request.getHeight());
         for (int rowIndex = 0; rowIndex < request.getHeight(); rowIndex++) {
             areas.add(new ArrayList<>());
             for (int columnIndex = 0; columnIndex < request.getWidth(); columnIndex++) {
@@ -31,11 +45,19 @@ class GameService {
                 .setGameId(RandomStringUtils.randomAlphanumeric(5))
                 .setYourPlayerColor(PlayerColor.values()[RandomUtils.nextInt(0, 1)])
                 .setPlayerOnMove(PlayerColor.values()[RandomUtils.nextInt(0, 1)]);
+        log.info("Asking player is " + game.getYourPlayerColor());
+        log.info("Player on turn is " + game.getPlayerOnMove());
+        if (request.isAgainstComputer()) {
+            log.info("The game is against a computer AI.");
+            game.setComputerPlayer(game.getYourPlayerColor().otherPlayer());
+            startComputerThinking(game);
+        }
         game.setPossibleMoves(genenerateNewBaseMoves(game));
         databaseGateway.save(game);
         if (game.getYourPlayerColor() != game.getPlayerOnMove()) {
             game.setPossibleMoves(new HashSet<>());
         }
+        log.info("New game " + game.getGameId() + " created.");
         return game;
     }
 
@@ -45,6 +67,21 @@ class GameService {
             request.setPlayerAsking(game.getYourPlayerColor().otherPlayer());
         }
         if (request.getPlayerAsking() != game.getPlayerOnMove()) {
+            if (game.isComputerOnMove()) {
+                if (game.getPossibleMoves().isEmpty()) {
+                    game.setPlayerOnMove(game.getPlayerOnMove().otherPlayer());
+                    game.setPossibleMoves(removeNonsenseMoves(computePossibleMoves(game, game.getLastMove()), game));
+                    game.setPlayerOnMove(game.getPlayerOnMove().otherPlayer());
+                }
+                Optional<Move> move = computerPlayerApi.getComputedMove(game);
+                if (move.isPresent()) {
+                    makeMove(new MakeMoveRequest()
+                            .setGameId(game.getGameId())
+                            .setMove(move.get())
+                            .setPlayer(game.getComputerPlayer()), game);
+                    return getGameStatus(request);
+                }
+            }
             game.setPossibleMoves(new HashSet<>());
         }
         game.setYourPlayerColor(request.getPlayerAsking());
@@ -56,12 +93,17 @@ class GameService {
                 .setGameId(request.getGameId())
                 .setPlayerAsking(request.getPlayer())
                 .setDifferenceOnly(true));
+        return makeMove(request, game);
+    }
+
+    private FullGameResponse makeMove(MakeMoveRequest request, FullGameResponse game) {
         if (!game.getPossibleMoves().contains(request.getMove())) {
             return game;
         }
 
         request.getMove().setColor(request.getPlayer());
-        game.getMoves().add(request.getMove());
+        log.info("Making move {} for player {}", request.getMove(), request.getPlayer());
+        game.rememberMove(request.getMove());
         game.setPossibleMoves(removeNonsenseMoves(computePossibleMoves(game, request.getMove()), game));
         game.setPlayerOnMove(game.getPlayerOnMove().otherPlayer());
         if (game.getPossibleMoves().isEmpty()) {
@@ -69,8 +111,15 @@ class GameService {
         }
         databaseGateway.save(game);
 
+        startComputerThinking(game);
         game.setPossibleMoves(new HashSet<>());
         return game;
+    }
+
+    private void startComputerThinking(FullGameResponse game) {
+        if (game.isComputerOnMove()) {
+            computerPlayerApi.startThinking(game);
+        }
     }
 
     private Set<Move> computePossibleMoves(FullGameResponse game, Move move) {

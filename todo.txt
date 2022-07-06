@@ -1,1 +1,2 @@
+Rename FullGameResponse to Game or FullGameStatus.
 Refactor both backend and frontend for better readability

@@ -4,17 +4,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Data
 @Accessors(chain = true)
 public class FullGameResponse {
     private List<List<AreaColor>> areas;
     private Set<Move> moves = new HashSet<>();
+    private Move lastMove;
     private Set<Move> possibleMoves;
     private String gameId;
     private PlayerColor yourPlayerColor;
     private PlayerColor playerOnMove;
+    private PlayerColor computerPlayer;
     private boolean over;
     private Map<AreaColor, Integer> score = new HashMap<>();
 
@@ -46,5 +52,20 @@ public class FullGameResponse {
     public void descreaseScoreFor(AreaColor color) {
         int oldScore = score.get(color);
         score.put(color, oldScore - 1);
+    }
+
+    @JsonIgnore
+    public boolean isComputerOnMove() {
+        return playerOnMove == computerPlayer;
+    }
+
+    public void rememberMove(Move move) {
+        moves.add(move);
+        lastMove = move;
+    }
+
+    @JsonIgnore
+    public PlayerColor getHumanPlayer() {
+        return computerPlayer.otherPlayer();
     }
 }

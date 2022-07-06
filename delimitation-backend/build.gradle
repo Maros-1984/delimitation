@@ -28,6 +28,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.awaitility:awaitility:4.2.0'
     implementation platform('com.google.cloud:libraries-bom:16.4.0')
     compile 'com.google.cloud:google-cloud-datastore'
 }
