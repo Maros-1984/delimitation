@@ -22,6 +22,7 @@ sourceCompatibility = '1.8'
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -31,6 +32,7 @@ dependencies {
     testImplementation 'org.awaitility:awaitility:4.2.0'
     implementation platform('com.google.cloud:libraries-bom:16.4.0')
     compile 'com.google.cloud:google-cloud-datastore'
+    implementation 'com.vranec.minimax:minimax:1.0-SNAPSHOT'
 }
 
 appengine {  // App Engine tasks configuration

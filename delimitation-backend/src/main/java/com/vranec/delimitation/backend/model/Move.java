@@ -11,7 +11,8 @@ import java.util.Set;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(exclude = "color")
-public class Move {
+public class Move implements com.vranec.minimax.Move {
+
     private int areaX;
     private int areaY;
     private Boolean bottom;

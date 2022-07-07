@@ -31,7 +31,7 @@ class GameServiceTest {
 
     @Test
     void gameService_canFillAreas() {
-        game = gameService.createNewGame(new CreateNewGameRequest());
+        game = gameService.createNewGame(new CreateNewGameRequest().setAgainstComputer(false));
         player = game.getPlayerOnMove();
 
         makeMove(new RightMove(0, 0));
@@ -63,7 +63,7 @@ class GameServiceTest {
 
     @Test
     void gameService_givenFilledAreas_doesNotRefillThemOnComputerMove() {
-        game = gameService.createNewGame(new CreateNewGameRequest());
+        game = gameService.createNewGame(new CreateNewGameRequest().setAgainstComputer(false));
         player = game.getPlayerOnMove();
 
         makeMove(new RightMove(0, 0));
@@ -89,7 +89,7 @@ class GameServiceTest {
 
     @Test
     void gameService_canDetectGameOver() {
-        game = gameService.createNewGame(new CreateNewGameRequest().setWidth(3).setHeight(2));
+        game = gameService.createNewGame(new CreateNewGameRequest().setWidth(3).setHeight(2).setAgainstComputer(false));
         player = game.getPlayerOnMove();
 
         makeMove(new BottomMove(0, 0));
@@ -107,6 +107,7 @@ class GameServiceTest {
         player = game.getPlayerOnMove();
 
         makeMove(new BottomMove(0, 0));
+        changePlayerOnMoveToComputer();
         assertThat(game.getPlayerOnMove()).isEqualTo(game.getComputerPlayer());
         await().atMost(5, SECONDS).until(() -> {
             FullGameResponse currentGameStatus = gameService.getGameStatus(

@@ -1,23 +1,40 @@
 package com.vranec.delimitation.backend;
 
+import com.vranec.delimitation.backend.model.AiBoard;
 import com.vranec.delimitation.backend.model.FullGameResponse;
 import com.vranec.delimitation.backend.model.Move;
+import com.vranec.minimax.ArtificialIntelligence;
+import com.vranec.minimax.Color;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 @Component
 public class DefaultComputerApi implements ComputerPlayerApi {
 
-    public void startThinking(FullGameResponse game) {
+    private final ArtificialIntelligence<Move> artificialIntelligence = new ArtificialIntelligence<>();
+    private final Map<String, Move> gameMoves = new ConcurrentHashMap<>();
 
+    public void startThinking(FullGameResponse game) {
+        gameMoves.remove(game.getGameId());
+        gameMoves.put(game.getGameId(),
+                artificialIntelligence.getBestMoveTimedIterativeDeepeningTimed(new AiBoard(game), 10,
+                        Color.COMPUTER, DateUtils.addSeconds(new Date(), 3).getTime()).getMove());
     }
 
     public Optional<Move> getComputedMove(FullGameResponse game) {
-        List<Move> possibleMoves = new ArrayList<>(game.getPossibleMoves());
-        return Optional.of(possibleMoves.get(new Random().nextInt(possibleMoves.size())));
+        Move result = gameMoves.get(game.getGameId());
+        if (result == null) {
+            return empty();
+        }
+        game.setPossibleMoves(game.generatePossibleMoves());
+        return of(result);
     }
 }

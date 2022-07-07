@@ -1,7 +1,6 @@
 package com.vranec.delimitation.backend;
 
 import com.vranec.delimitation.backend.model.FullGameResponse;
-import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -19,9 +18,7 @@ class HashMapDatabaseGateway implements DatabaseGateway {
     }
 
     private FullGameResponse copyOf(FullGameResponse game) {
-        FullGameResponse copy = new FullGameResponse();
-        BeanUtils.copyProperties(game, copy);
-        return copy;
+        return game.getCopy();
     }
 
     public FullGameResponse load(String gameId) {
