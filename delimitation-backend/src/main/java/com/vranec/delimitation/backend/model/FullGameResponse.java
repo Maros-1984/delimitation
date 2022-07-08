@@ -2,18 +2,20 @@ package com.vranec.delimitation.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Data
 @Accessors(chain = true)
+@EqualsAndHashCode(of = "gameId")
 public class FullGameResponse {
 
     private AreaColor[][] areas;
@@ -32,23 +34,6 @@ public class FullGameResponse {
     private int width;
     @JsonIgnore
     private int height;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        FullGameResponse that = (FullGameResponse) o;
-        return gameId.equals(that.gameId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(gameId);
-    }
 
     public boolean connectsTo(Set<Move> moves) {
         return moves.stream().anyMatch(this::connectsTo);
@@ -219,8 +204,8 @@ public class FullGameResponse {
             return;
         }
         areasFilled.forEach(area -> {
-            Set<Area> filledNeighbours = area.fillNeighbours();
-            newAreasFilled.addAll(filledNeighbours);
+            Stream<Area> filledNeighbours = area.fillNeighbours();
+            filledNeighbours.forEach(newAreasFilled::add);
         });
         if (newAreasFilled.isEmpty()) {
             return;

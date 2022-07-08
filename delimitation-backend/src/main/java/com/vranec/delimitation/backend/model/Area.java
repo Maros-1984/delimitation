@@ -2,13 +2,15 @@ package com.vranec.delimitation.backend.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Data
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = "game")
 public class Area {
     private int areaX;
     private int areaY;
@@ -31,22 +33,23 @@ public class Area {
         return areaX >= 0 && areaY >= 0 && areaY < game.getHeight() && areaX < game.getWidth();
     }
 
-    public Set<Area> fillNeighbours() {
-        Set<Area> allNeighbors = getNeighbours();
-        return allNeighbors.stream()
+    public Stream<Area> fillNeighbours() {
+        Area[] allNeighbors = getNeighbours();
+        return Arrays.stream(allNeighbors)
+                .filter(Objects::nonNull)
                 .filter(Area::isNotFilled)
-                .peek(Area::fill)
-                .collect(Collectors.toSet());
+                .peek(Area::fill);
     }
 
-    private Set<Area> getNeighbours() {
-        Set<Area> neighbours = new HashSet<>();
+    private Area[] getNeighbours() {
+        Area[] neighbours = new Area[4];
+        int count = 0;
 
         Move bottomBorder = new Move().setAreaX(areaX).setAreaY(areaY).setBottom(true);
         if (!game.getMoves().contains(bottomBorder)) {
             Area bottomNeighbour = new Area(areaX, areaY + 1, game);
             if (bottomNeighbour.isInsideGame() && bottomNeighbour.isNotFilled()) {
-                neighbours.add(bottomNeighbour);
+                neighbours[count++] = bottomNeighbour;
             }
         }
 
@@ -54,7 +57,7 @@ public class Area {
         if (!game.getMoves().contains(topBorder)) {
             Area topNeighbour = new Area(areaX, areaY - 1, game);
             if (topNeighbour.isInsideGame() && topNeighbour.isNotFilled()) {
-                neighbours.add(topNeighbour);
+                neighbours[count++] = topNeighbour;
             }
         }
 
@@ -62,7 +65,7 @@ public class Area {
         if (!game.getMoves().contains(rightBorder)) {
             Area rightNeighbour = new Area(areaX + 1, areaY, game);
             if (rightNeighbour.isInsideGame() && rightNeighbour.isNotFilled()) {
-                neighbours.add(rightNeighbour);
+                neighbours[count++] = rightNeighbour;
             }
         }
 
@@ -70,7 +73,7 @@ public class Area {
         if (!game.getMoves().contains(leftBorder)) {
             Area leftNeighbour = new Area(areaX - 1, areaY, game);
             if (leftNeighbour.isInsideGame() && leftNeighbour.isNotFilled()) {
-                neighbours.add(leftNeighbour);
+                neighbours[count] = leftNeighbour;
             }
         }
 
