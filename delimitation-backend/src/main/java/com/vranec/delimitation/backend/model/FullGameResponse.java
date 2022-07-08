@@ -28,6 +28,10 @@ public class FullGameResponse {
     private Map<AreaColor, Integer> score = new HashMap<>();
     @JsonIgnore
     private transient Set<Area> lastFilledAreas;
+    @JsonIgnore
+    private int width;
+    @JsonIgnore
+    private int height;
 
     public boolean connectsTo(Set<Move> moves) {
         return moves.stream().anyMatch(this::connectsTo);
@@ -37,14 +41,11 @@ public class FullGameResponse {
         return moves.contains(move) || move.isOriginalBorder(getWidth(), getHeight());
     }
 
-    @JsonIgnore
-    public int getHeight() {
-        return getAreas().size();
-    }
-
-    @JsonIgnore
-    public int getWidth() {
-        return getAreas().get(0).size();
+    public FullGameResponse setAreas(List<List<AreaColor>> areas) {
+        this.areas = areas;
+        this.width = getAreas().get(0).size();
+        this.height = getAreas().size();
+        return this;
     }
 
     @JsonIgnore

@@ -28,7 +28,7 @@ public class Area {
     }
 
     public boolean isInsideGame() {
-        return areaX >= 0 && areaY >= 0 && areaY < game.getAreas().size() && areaX < game.getAreas().get(0).size();
+        return areaX >= 0 && areaY >= 0 && areaY < game.getHeight() && areaX < game.getWidth();
     }
 
     public Set<Area> fillNeighbours() {
