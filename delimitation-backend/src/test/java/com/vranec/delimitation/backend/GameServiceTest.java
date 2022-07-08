@@ -49,16 +49,16 @@ class GameServiceTest {
 
     private void assertCorrectAreasAreFilled() {
         AreaColor areaColor = player.otherPlayer().toAreaColor();
-        assertThat(game.getAreas().get(0).get(0)).isEqualTo(AreaColor.EMPTY);
-        assertThat(game.getAreas().get(0).get(1)).isEqualTo(areaColor);
-        assertThat(game.getAreas().get(0).get(2)).isEqualTo(areaColor);
-        assertThat(game.getAreas().get(0).get(3)).isEqualTo(AreaColor.EMPTY);
-        assertThat(game.getAreas().get(1).get(0)).isEqualTo(AreaColor.EMPTY);
-        assertThat(game.getAreas().get(1).get(1)).isEqualTo(areaColor);
-        assertThat(game.getAreas().get(1).get(2)).isEqualTo(AreaColor.EMPTY);
-        assertThat(game.getAreas().get(2).get(0)).isEqualTo(AreaColor.EMPTY);
-        assertThat(game.getAreas().get(2).get(1)).isEqualTo(AreaColor.EMPTY);
-        assertThat(game.getAreas().get(2).get(2)).isEqualTo(AreaColor.EMPTY);
+        assertThat(game.getAreas()[0][0]).isEqualTo(AreaColor.EMPTY);
+        assertThat(game.getAreas()[0][1]).isEqualTo(areaColor);
+        assertThat(game.getAreas()[0][2]).isEqualTo(areaColor);
+        assertThat(game.getAreas()[0][3]).isEqualTo(AreaColor.EMPTY);
+        assertThat(game.getAreas()[1][0]).isEqualTo(AreaColor.EMPTY);
+        assertThat(game.getAreas()[1][1]).isEqualTo(areaColor);
+        assertThat(game.getAreas()[1][2]).isEqualTo(AreaColor.EMPTY);
+        assertThat(game.getAreas()[2][0]).isEqualTo(AreaColor.EMPTY);
+        assertThat(game.getAreas()[2][1]).isEqualTo(AreaColor.EMPTY);
+        assertThat(game.getAreas()[2][2]).isEqualTo(AreaColor.EMPTY);
     }
 
     @Test

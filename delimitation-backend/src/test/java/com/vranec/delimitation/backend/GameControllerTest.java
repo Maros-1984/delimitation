@@ -32,8 +32,8 @@ class GameControllerTest {
     void createNewGame_givenNoArguments_generatesDefaultGame() throws Exception {
         FullGameResponse game = createDefaultGame();
 
-        assertThat(game.getAreas()).hasSizeGreaterThan(5);
-        assertThat(game.getAreas().get(0)).hasSizeGreaterThan(5);
+        assertThat(game.getAreas().length).isGreaterThan(5);
+        assertThat(game.getAreas()[0].length).isGreaterThan(5);
         assertThat(game.getGameId()).isNotBlank();
         assertThat(game.getYourPlayerColor()).isNotNull();
         assertThat(game.getPlayerOnMove()).isNotNull();

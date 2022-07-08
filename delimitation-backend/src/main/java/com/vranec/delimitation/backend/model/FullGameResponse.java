@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Accessors(chain = true)
 public class FullGameResponse {
 
-    private List<List<AreaColor>> areas;
+    private AreaColor[][] areas;
     private Set<Move> moves = new HashSet<>();
     private Move lastMove;
     private Set<Move> possibleMoves;
@@ -33,6 +33,23 @@ public class FullGameResponse {
     @JsonIgnore
     private int height;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        FullGameResponse that = (FullGameResponse) o;
+        return gameId.equals(that.gameId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gameId);
+    }
+
     public boolean connectsTo(Set<Move> moves) {
         return moves.stream().anyMatch(this::connectsTo);
     }
@@ -41,10 +58,10 @@ public class FullGameResponse {
         return moves.contains(move) || move.isOriginalBorder(getWidth(), getHeight());
     }
 
-    public FullGameResponse setAreas(List<List<AreaColor>> areas) {
+    public FullGameResponse setAreas(AreaColor[][] areas) {
         this.areas = areas;
-        this.width = getAreas().get(0).size();
-        this.height = getAreas().size();
+        this.width = areas[0].length;
+        this.height = areas.length;
         return this;
     }
 
@@ -226,7 +243,8 @@ public class FullGameResponse {
         FullGameResponse copy = new FullGameResponse();
         copy.setPlayerOnMove(playerOnMove);
         copy.setOver(over);
-        copy.setAreas(areas.stream().map(ArrayList::new).collect(Collectors.toList()));
+        copy.setAreas(Arrays.stream(areas).map(a -> Arrays.copyOf(a, a.length)).collect(Collectors.toList())
+                .toArray(new AreaColor[][]{}));
         copy.setMoves(new HashSet<>(moves));
         copy.setLastMove(lastMove);
         copy.setPossibleMoves(new HashSet<>(possibleMoves));

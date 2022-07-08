@@ -25,7 +25,7 @@ public class DefaultComputerApi implements ComputerPlayerApi {
     public void startThinking(FullGameResponse game) {
         gameMoves.remove(game.getGameId());
         gameMoves.put(game.getGameId(),
-                artificialIntelligence.getBestMoveTimedIterativeDeepeningTimed(new AiBoard(game), 10,
+                artificialIntelligence.getBestMoveTimedIterativeDeepeningTimed(new AiBoard(game), 20,
                         Color.COMPUTER, DateUtils.addSeconds(new Date(), 3).getTime()).getMove());
     }
 

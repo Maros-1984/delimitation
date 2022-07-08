@@ -15,14 +15,14 @@ public class Area {
     private FullGameResponse game;
 
     public void unfill() {
-        game.descreaseScoreFor(game.getAreas().get(areaY).get(areaX));
-        game.getAreas().get(areaY).set(areaX, AreaColor.EMPTY);
+        game.descreaseScoreFor(game.getAreas()[areaY][areaX]);
+        game.getAreas()[areaY][areaX] = AreaColor.EMPTY;
     }
 
     public void fill() {
         if (isInsideGame() && isNotFilled()) {
             AreaColor color = game.getPlayerOnMove().toAreaColor();
-            game.getAreas().get(areaY).set(areaX, color);
+            game.getAreas()[areaY][areaX] = color;
             game.increaseScoreFor(color);
         }
     }
@@ -78,6 +78,6 @@ public class Area {
     }
 
     public boolean isNotFilled() {
-        return game.getAreas().get(areaY).get(areaX) == AreaColor.EMPTY;
+        return game.getAreas()[areaY][areaX] == AreaColor.EMPTY;
     }
 }

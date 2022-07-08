@@ -13,9 +13,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -28,12 +26,11 @@ class GameService {
     private ComputerPlayerApi computerPlayerApi;
 
     FullGameResponse createNewGame(CreateNewGameRequest request) {
-        List<List<AreaColor>> areas = new ArrayList<>();
         log.info("Starting creating new game " + request.getWidth() + "x" + request.getHeight());
+        AreaColor[][] areas = new AreaColor[request.getHeight()][request.getWidth()];
         for (int rowIndex = 0; rowIndex < request.getHeight(); rowIndex++) {
-            areas.add(new ArrayList<>());
             for (int columnIndex = 0; columnIndex < request.getWidth(); columnIndex++) {
-                areas.get(rowIndex).add(AreaColor.EMPTY);
+                areas[rowIndex][columnIndex] = AreaColor.EMPTY;
             }
         }
 
