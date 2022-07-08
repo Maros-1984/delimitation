@@ -16,6 +16,6 @@ export const useWaitingForAnotherPlayer = (game, setGame) => {
                 }
             })
                 .then(response => response.json())
-                .then(data => setGame(data)), 2000);
+                .then(data => setGame(data)), 500);
     }, [game, setGame])
 }
